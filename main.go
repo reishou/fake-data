@@ -27,12 +27,12 @@ func touchCsv(name string) (*csv.Writer, *os.File) {
 	return csv.NewWriter(file), file
 }
 
-func writeCsv(writer *csv.Writer, file *os.File, n int64, schema Schema) {
+func writeCsv(writer *csv.Writer, file *os.File, count int64, schema Schema) {
 	var i int64
 
-	bar := pb.Full.Start(int(n))
+	bar := pb.Full.Start(int(count))
 
-	for i < n {
+	for i < count {
 		i += 1
 		_ = writer.Write(makeData(schema))
 		bar.Increment()
@@ -119,34 +119,26 @@ func callFuncByName(name string) string {
 	if _, exist := mapperInt64[name]; exist {
 		return fmt.Sprintf("%d", mapperInt64[name]())
 	}
-
 	return ""
 }
 
-func exportCsv(name string, schema Schema) {
+func exportCsv(name string, schema Schema, count int64) {
 	writer, file := touchCsv(name)
-	n := 2 * math.Pow(10, 6)
-	writeCsv(writer, file, int64(n), schema)
+	writeCsv(writer, file, count, schema)
 }
 
 func main() {
-	args := os.Args
 	countPtr := flag.Int64("count", int64(math.Pow(10, 6)), "An int")
-
+	tempPtr := flag.String("template", "", "A template name")
 	flag.Parse()
 
-	fmt.Printf("%v", *countPtr)
-	fmt.Printf("%v", args)
-
-	if len(args) < 2 {
-		fmt.Printf("required yml template name")
+	if *tempPtr == "" {
+		fmt.Print("require template name")
 		os.Exit(0)
 	}
 
-	func(arg string) {
-		schema := getSchema(arg)
-		exportCsv(arg, schema)
-	}(args[1])
+	schema := getSchema(*tempPtr)
+	exportCsv(*tempPtr, schema, *countPtr)
 }
 
 func getSchema(arg string) Schema {
