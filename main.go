@@ -122,23 +122,17 @@ func callFuncByName(name string) string {
 	return ""
 }
 
-func exportCsv(name string, schema Schema, count int64) {
+func exportCsv(name string, count int64) {
+	schema := getSchema(name)
 	writer, file := touchCsv(name)
 	writeCsv(writer, file, count, schema)
 }
 
 func main() {
-	countPtr := flag.Int64("count", int64(math.Pow(10, 6)), "An int")
-	tempPtr := flag.String("template", "", "A template name")
+	countPtr := flag.Int64("count", int64(math.Pow(10, 3)), "An int")
+	tempPtr := flag.String("template", "default", "A template name")
 	flag.Parse()
-
-	if *tempPtr == "" {
-		fmt.Print("require template name")
-		os.Exit(0)
-	}
-
-	schema := getSchema(*tempPtr)
-	exportCsv(*tempPtr, schema, *countPtr)
+	exportCsv(*tempPtr, *countPtr)
 }
 
 func getSchema(arg string) Schema {

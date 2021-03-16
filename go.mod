@@ -1,4 +1,4 @@
-module github.com/reishou/utils
+module github.com/reishou/fake-data
 
 go 1.16
 
