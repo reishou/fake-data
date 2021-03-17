@@ -8,8 +8,14 @@ git clone https://github.com/reishou/fake-data.git && cd fake-data
 
 Run generate example csv
 
+With *nix
 ```bash
 ./fake-data -template=default -count=1000
+```
+
+With windows
+```bash
+fake-data.exe -template=default -count=1000
 ```
 
 Create a custom template yml `template/user.yml`
@@ -31,8 +37,14 @@ schema:
 
 Generate file `csv/user.csv`
 
+With *nix
 ```bash
 ./fake-data -template=user -count=1000000
+```
+
+With windows
+```bash
+fake-data.exe -template=user -count=1000000
 ```
 
 List all tags supported
